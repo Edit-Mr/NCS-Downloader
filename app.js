@@ -34,7 +34,7 @@ app.get(baseUrl + "/search", async (req, res) => {
       const tid = $(element).find(".player-play").data("tid");
       const versions = $(element).find(".player-play").data("versions");
       const genre = $(element).find(".player-play").data("genre");
-      const date = $(element).find("td[5]").text();
+      const date = $(element).find("td:nth-child(6)").text();
       const data = {
         trackUrl,
         artist,
@@ -107,7 +107,6 @@ app.get(baseUrl + "/download/:tid", async (req, res) => {
     const instrumental = req.params.tid.includes("i_") ? " (Instrumental)" : "";
     const filePath =
       targetPath + data.artist + " - " + data.title + instrumental + ".mp3";
-
     // 寫入檔案
     await fs.writeFile(filePath, fileData);
     console.log("Processing: " + data.title + instrumental);
@@ -117,8 +116,16 @@ app.get(baseUrl + "/download/:tid", async (req, res) => {
         artist: data.artist,
         publisher: "NoCopyrightSounds",
         genre: data.genre,
-        date: data.date,
+        date: new Date(data.date)
+          .toLocaleDateString("en", {
+            day: "2-digit",
+            month: "2-digit",
+          })
+          .replace("/", ""),
+          originalYear: new Date(data.date).getFullYear() + "",
+        year: new Date(data.date).getFullYear() + "",
         copyright: "NCS",
+        album: "NoCopyrightSounds",
         image: {
           mime: "image/jpeg",
           type: {

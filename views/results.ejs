@@ -88,12 +88,12 @@
         document.getElementById(tid).innerText = result;
         // if the response is "Downloading", run the function again after 2 seconds
         if (result === "Downloading") {
-          setInterval(async () => {
+          const intervalId = setInterval(async () => {
             const response = await fetch("status/" + tid);
             const result = await response.text();
             document.getElementById(tid).innerText = result;
             if (result === "Downloaded") {
-              clearInterval();
+              clearInterval(intervalId);
             }
           }, 2000);
         }
