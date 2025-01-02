@@ -102,7 +102,13 @@ app.get("/download/:tid", async (req, res) => {
 
     const image = Buffer.from(imageResponse.data);
     const fileData = Buffer.from(musicResponse.data);
-    const filePath = targetPath + data.artist + " - " + data.title + ".mp3";
+    const filePath =
+      targetPath +
+      data.artist +
+      " - " +
+      data.title +
+      (req.params.tid.includes("i_") ? " (Instrumental)" : "") +
+      ".mp3";
 
     // 寫入檔案
     await fs.writeFile(filePath, fileData);
