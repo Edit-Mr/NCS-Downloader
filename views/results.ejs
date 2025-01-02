@@ -82,7 +82,7 @@
     <script>
       const download = async (tid) => {
         // fetch and get result text
-        const response = await fetch("/download/" + tid);
+        const response = await fetch("../download/" + tid);
         const result = await response.text();
         // change the button text to response
         document.getElementById(tid).innerText = result;
