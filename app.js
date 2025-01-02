@@ -11,7 +11,7 @@ const baseUrl = process.env.BASEURL || "";
 
 let job = {};
 app.set("view engine", "ejs");
-app.use(express.static("public"));
+app.use(baseUrl, express.static("public"));
 
 app.get(baseUrl + "/", (req, res) => {
   res.render("index");
