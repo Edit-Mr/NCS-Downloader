@@ -7,16 +7,17 @@ const PORT = process.env.PORT || 3000;
 const NodeID3tag = require("node-id3tag");
 const fs = require("fs").promises;
 const targetPath = process.env.TARGET || "./music/";
+const baseUrl = process.env.TARGET || "";
 
 let job = {};
 app.set("view engine", "ejs");
 app.use(express.static("public"));
 
-app.get("/", (req, res) => {
+app.get(baseUrl + "/", (req, res) => {
   res.render("index");
 });
 
-app.get("/search", async (req, res) => {
+app.get(baseUrl + "/search", async (req, res) => {
   const { query } = req.query;
   const url = `https://ncs.io/music-search?q=${query}&genre=&mood=`;
 
