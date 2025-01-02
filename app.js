@@ -49,7 +49,7 @@ app.get("/search", async (req, res) => {
       results.push(data);
     });
 
-    res.render("results", { results });
+    res.render("results", { results, query });
   } catch (error) {
     console.error(error);
     res.status(500).send("Error fetching data.");
@@ -86,13 +86,25 @@ app.get("/download/:tid", async (req, res) => {
       .replace(")", "")
       .replace(/['"]+/g, "")
       .replace(/-[\d]{1,4}x[\d]{1,4}/, "");
-    response = await axios.get(imageUrl, { responseType: "arraybuffer" });
-    const image = Buffer.from(response.data);
-    const downloadLink = "https://ncs.io/track/download/" + tid;
-    console.log(downloadLink);
-    response = await axios.get(downloadLink, { responseType: "arraybuffer" });
-    const fileData = Buffer.from(response.data);
+    // 並行下載圖片和音樂檔案
+    const [imageResponse, musicResponse] = await Promise.all([
+      axios.get(imageUrl, { responseType: "arraybuffer" }),
+      axios.get("https://ncs.io/track/download/" + tid, {
+        responseType: "arraybuffer",
+        onDownloadProgress: (progressEvent) => {
+          const percentage = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total
+          );
+          job[req.params.tid].status = `Downloading: ${percentage}%`;
+        },
+      }),
+    ]);
+
+    const image = Buffer.from(imageResponse.data);
+    const fileData = Buffer.from(musicResponse.data);
     const filePath = targetPath + data.artist + " - " + data.title + ".mp3";
+
+    // 寫入檔案
     await fs.writeFile(filePath, fileData);
     console.log("Processing: " + data.title);
     let success = NodeID3tag.write(

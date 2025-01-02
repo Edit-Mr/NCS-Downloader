@@ -1,18 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NCS Music Search</title>
-  <link rel="stylesheet" href="/css/styles.css">
-</head>
-<body>
-  <div class="container">
-    <h1>NCS Music Search</h1>
-    <form action="/search" method="get">
-      <input type="text" name="query" placeholder="Enter your query" required>
-      <button type="submit">Search</button>
-    </form>
-  </div>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NCS Music Downloader</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+  </head>
+  <body class="home">
+    <div class="container">
+      <h1>NCS Music Downloader</h1>
+      <p>
+        Simpy download High Quality NoCopyrightSounds music to your server oe
+        directly to your device.
+      </p>
+      <form action="/search" method="get">
+        <input
+          type="text"
+          name="query"
+          placeholder="Enter your query"
+          required
+        />
+        <button type="submit">Search</button>
+      </form>
+      <%- include("footer") %>
+    </div>
+  </body>
 </html>

@@ -3,69 +3,81 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Search Results</title>
+    <title>Search Results - NCS Music Downloader</title>
     <link rel="stylesheet" href="/css/styles.css" />
   </head>
   <body>
     <div class="container">
-      <h1>Search Results</h1>
-      <a href="/">Back to Search</a>
-      <table>
-        <thead>
-          <tr>
-            <th>Cover</th>
-            <th>Title</th>
-            <th>Artist</th>
-            <th>Genre</th>
-            <th>Versions</th>
-            <th>Server Download</th>
-            <th>Local Download</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% results.forEach(result => { %>
-          <tr>
-            <td>
-              <img
-                src="<%= result.cover %>"
-                alt="<%= result.title %>"
-                width="100"
-              />
-            </td>
-            <td><%= result.title %></td>
-            <td><%= result.artist %></td>
-            <td><%= result.genre %></td>
-            <td>
-              <% result.versions.forEach(version => { %>
-              <span><%= version %></span>
-              <% }) %>
-            </td>
-            <td>
-              <% result.versions.forEach(version => { %>
-              <button
-                id="<%= (version=='Regular')?'':'i_' %><%= result.tid %>"
-                onclick="download(`<%= (version=='Regular')?'':'i_' %><%= result.tid %>`)"
-                class="btn"
-              >
-                <%= version %> Download
-              </button>
-              <% }) %>
-            </td>
-            <td>
-              <% result.versions.forEach(version => { %>
-              <a
-                href="https://ncs.io/track/download/<%= (version=='Regular')?'':'i_' %><%= result.tid %>"
-                download=""
-                class="btn"
-              >
-                <%= version %> Download
-              </a>
-              <% }) %>
-            </td>
-          </tr>
-          <% }) %>
-        </tbody>
-      </table>
+      <h1>NCS Music Downloader</h1>
+      <form action="/search" method="get">
+        <input
+          type="text"
+          name="query"
+          placeholder="Enter your query"
+          required
+          value="<%= query %>"
+        />
+        <button type="submit">Search</button>
+      </form>
+      <section>
+        <table>
+          <thead>
+            <tr>
+              <th>Cover</th>
+              <th>Title</th>
+              <th>Artist</th>
+              <th>Genre</th>
+              <th>Versions</th>
+              <th>Download to Server</th>
+              <th>Direct Download</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% results.forEach(result => { %>
+            <tr>
+              <td class="centerTd">
+                <img
+                  src="<%= result.cover %>"
+                  alt="<%= result.title %>"
+                  width="100"
+                />
+              </td>
+              <td><%= result.title %></td>
+              <td><%= result.artist %></td>
+              <td><%= result.genre %></td>
+              <td class="centerTd">
+                <% result.versions.forEach(version => { %>
+                <span><%= version %></span>
+                <% }) %>
+              </td>
+              <td class="centerTd">
+                <% result.versions.forEach(version => { %>
+                <button
+                  id="<%= (version=='Regular')?'':'i_' %><%= result.tid %>"
+                  onclick="download(`<%= (version=='Regular')?'':'i_' %><%= result.tid %>`)"
+                  class="btn"
+                >
+                  <%= version %>
+                </button>
+                <% }) %>
+              </td>
+              <td class="centerTd">
+                <% result.versions.forEach(version => { %>
+                <a
+                  href="https://ncs.io/track/download/<%= (version=='Regular')?'':'i_' %><%= result.tid %>"
+                  download=""
+                  class="btn"
+                >
+                  <%= version %>
+                </a>
+                <% }) %>
+              </td>
+            </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </section>
+      <%- include("footer") %>
     </div>
     <script>
       const download = async (tid) => {
