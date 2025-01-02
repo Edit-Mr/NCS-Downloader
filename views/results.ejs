@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Search Results</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Search Results</h1>
+      <a href="/">Back to Search</a>
+      <table>
+        <thead>
+          <tr>
+            <th>Cover</th>
+            <th>Title</th>
+            <th>Artist</th>
+            <th>Genre</th>
+            <th>Versions</th>
+            <th>Server Download</th>
+            <th>Local Download</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% results.forEach(result => { %>
+          <tr>
+            <td>
+              <img
+                src="<%= result.cover %>"
+                alt="<%= result.title %>"
+                width="100"
+              />
+            </td>
+            <td><%= result.title %></td>
+            <td><%= result.artist %></td>
+            <td><%= result.genre %></td>
+            <td>
+              <% result.versions.forEach(version => { %>
+              <span><%= version %></span>
+              <% }) %>
+            </td>
+            <td>
+              <% result.versions.forEach(version => { %>
+              <button
+                id="<%= (version=='Regular')?'':'i_' %><%= result.tid %>"
+                onclick="download(`<%= (version=='Regular')?'':'i_' %><%= result.tid %>`)"
+                class="btn"
+              >
+                <%= version %> Download
+              </button>
+              <% }) %>
+            </td>
+            <td>
+              <% result.versions.forEach(version => { %>
+              <a
+                href="https://ncs.io/track/download/<%= (version=='Regular')?'':'i_' %><%= result.tid %>"
+                download=""
+                class="btn"
+              >
+                <%= version %> Download
+              </a>
+              <% }) %>
+            </td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+    <script>
+      const download = async (tid) => {
+        // fetch and get result text
+        const response = await fetch("/download/" + tid);
+        const result = await response.text();
+        // change the button text to response
+        document.getElementById(tid).innerText = result;
+        // if the response is "Downloading", run the function again after 2 seconds
+        if (result === "Downloading") {
+          setInterval(async () => {
+            const response = await fetch("/status/" + tid);
+            const result = await response.text();
+            document.getElementById(tid).innerText = result;
+            if (result === "Downloaded") {
+              clearInterval();
+            }
+          }, 2000);
+        }
+      };
+    </script>
+  </body>
+</html>
