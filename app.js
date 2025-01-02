@@ -56,14 +56,14 @@ app.get(baseUrl + "/search", async (req, res) => {
     res.status(500).send("Error fetching data.");
   }
 });
-app.get("/status/:tid", async (req, res) => {
+app.get(baseUrl + "/status/:tid", async (req, res) => {
   try {
     res.send(job[req.params.tid]["status"]);
   } catch (error) {
     res.status(500).send("No Data");
   }
 });
-app.get("/download/:tid", async (req, res) => {
+app.get(baseUrl + "/download/:tid", async (req, res) => {
   let data = job[req.params.tid.replace("i_", "")];
   if (!data) return res.send("Please reload the page");
   if (job[req.params.tid] && job[req.params.tid].status == "Downloading")
