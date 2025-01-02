@@ -7,7 +7,7 @@ const PORT = process.env.PORT || 3000;
 const NodeID3tag = require("node-id3tag");
 const fs = require("fs").promises;
 const targetPath = process.env.TARGET || "./music/";
-const baseUrl = process.env.TARGET || "";
+const baseUrl = process.env.BASEURL || "";
 
 let job = {};
 app.set("view engine", "ejs");
