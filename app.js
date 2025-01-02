@@ -104,20 +104,16 @@ app.get(baseUrl + "/download/:tid", async (req, res) => {
 
     const image = Buffer.from(imageResponse.data);
     const fileData = Buffer.from(musicResponse.data);
+    const instrumental = req.params.tid.includes("i_") ? " (Instrumental)" : "";
     const filePath =
-      targetPath +
-      data.artist +
-      " - " +
-      data.title +
-      (req.params.tid.includes("i_") ? " (Instrumental)" : "") +
-      ".mp3";
+      targetPath + data.artist + " - " + data.title + instrumental + ".mp3";
 
     // 寫入檔案
     await fs.writeFile(filePath, fileData);
-    console.log("Processing: " + data.title);
+    console.log("Processing: " + data.title + instrumental);
     let success = NodeID3tag.write(
       {
-        title: data.title,
+        title: data.title + instrumental,
         artist: data.artist,
         publisher: "NoCopyrightSounds",
         genre: data.genre,
@@ -135,9 +131,9 @@ app.get(baseUrl + "/download/:tid", async (req, res) => {
       },
       filePath
     );
-    console.log(success);
     if (success) {
       job[req.params.tid].status = "Downloaded";
+      console.log("Downloaded: " + data.title + instrumental);
     } else {
       job[req.params.tid].status = "Failed";
       console.error("Failed to write tags");
