@@ -82,14 +82,14 @@
     <script>
       const download = async (tid) => {
         // fetch and get result text
-        const response = await fetch("download" + tid);
+        const response = await fetch("download/" + tid);
         const result = await response.text();
         // change the button text to response
         document.getElementById(tid).innerText = result;
         // if the response is "Downloading", run the function again after 2 seconds
         if (result === "Downloading") {
           setInterval(async () => {
-            const response = await fetch("status" + tid);
+            const response = await fetch("status/" + tid);
             const result = await response.text();
             document.getElementById(tid).innerText = result;
             if (result === "Downloaded") {
