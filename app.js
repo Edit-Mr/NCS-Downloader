@@ -63,18 +63,19 @@ app.get("/status/:tid", async (req, res) => {
   }
 });
 app.get("/download/:tid", async (req, res) => {
-  if (!job[req.params.tid]) return res.send("Please reload the page");
-  let status = job[req.params.tid].status;
-  if (status == "Downloading") {
-    return res.send("Already Downloading");
-  }
-  res.send("Downloading");
   let data = job[req.params.tid.replace("i_", "")];
+  if (!data) return res.send("Please reload the page");
+  if (job[req.params.tid] && job[req.params.tid].status == "Downloading")
+    return res.send("Already Downloading");
+  res.send("Downloading");
+  job[req.params.tid] = data;
   job[req.params.tid].status = "Downloading";
   const { tid } = req.params;
 
   try {
-    let response = await axios.get(`https://ncs.io/track/info/${tid}`);
+    let response = await axios.get(
+      `https://ncs.io/track/info/${req.params.tid.replace("i_", "")}`
+    );
     const $ = cheerio.load(response.data);
     // get background image url from .img
     console.log("Downloading: " + data.title);
